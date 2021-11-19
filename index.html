@@ -1,0 +1,55 @@
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<title>3. 100 napos állásgyakorlat időzítő</title>
+	<link rel="stylesheet" type="text/css" href="static/hagyi.css" />
+	<script src="static/hagyi.js"></script>
+</head>
+
+<body>
+	<h1>3. 100 napos állásgyakorlat időzítő</h1>
+
+	<div id="params" class="section">
+		Első nap: <input id="paramFirstDay" type="date" onchange="processParams()"><script>elByID("paramFirstDay").value = todayString();</script>
+		Állás az 1. napon: <input id="paramFirstDuration" type="number" min="1" max="100" value="4" onchange="processParams()"> perc.
+		A 100. napon: <input id="paramLastDuration" type="number" min="1" max="100" value="40" onchange="processParams()"> perc.
+		<input id="paramSound" type="checkbox" checked><label for="paramSound">Hang</label>
+	</div>
+
+	<div id="info" class="section">
+		<div id="infoError"></div>
+		<div id="infoOK">
+			<div>
+				Ma van a(z) <span id="infoDay" class="infoValue"></span>. nap, <span id="infoDuration" class="infoValue"></span> percet kell állni.
+				Kitartást!
+			</div>
+			<div id="infoControl" class="section">
+				<button id="startStopButton" onclick="startStop()">Indítás!</button>
+			</div>
+			<div id="infoStartEnd" style="display: none" class="section">
+				Kezdés: <span id="infoStart" class="infoValue"></span>
+				Vége: <span id="infoEnd" class="infoValue"></span>
+			</div>
+			<div id="infoCongratulations" style="display: none" class="section">
+				Gratulálok! Megcsináltad! (Tudtam, hogy sikerülni fog!)
+			</div>
+			<table id="infoTable" class="center" class="section">
+				<tr>
+					<th>Állás</th>
+					<th style="min-width: 60px;">Idő</th>
+					<th style="min-width: 60px;">Eltelt</th>
+					<th style="min-width: 60px;">Maradék</th>
+					<th style="min-width: 60px;">Haladás</th>
+				</tr>
+			</table>
+		</div>
+	</div>
+
+	<script>
+		initTable();
+		processParams();
+	</script>
+
+</body>
+</html>

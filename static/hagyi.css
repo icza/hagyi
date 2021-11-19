@@ -1,0 +1,53 @@
+body {
+	font-family: Arial;
+	font-size: 100%;
+	width: 100%;
+	text-align: center;
+}
+
+table {
+	border-collapse: collapse;
+	text-align: center;
+}
+
+table, th, td { border: 1px solid #bbb }
+
+th, td { padding: 3px }
+
+th {
+	background-color: #d80;
+	color: white;
+}
+
+tr { background: white }
+
+tr:nth-child(even) { background-color: #fff }
+
+tr:nth-child(odd) { background-color: #fff3cf }
+
+tr:hover { background-color: #ddf }
+.center {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.section {
+	padding: 5px;
+}
+
+#infoError {
+	color: red;
+}
+
+#infoTable {
+	margin-top: 10px;
+}
+
+.infoValue {
+	font-weight: bold;
+}
+
+#infoCongratulations {
+	font-weight: bold;
+	color: blue;
+}
