@@ -1,8 +1,16 @@
 body {
+	margin: 0px;
+	padding: 0px;
 	font-family: Arial;
 	font-size: 100%;
 	width: 100%;
 	text-align: center;
+}
+
+h1 {
+	margin: 0px;
+	padding: 10px;
+	font-size: 170%;
 }
 
 table {
@@ -26,6 +34,7 @@ tr:nth-child(even) { background-color: #fff }
 tr:nth-child(odd) { background-color: #fff3cf }
 
 tr:hover { background-color: #ddf }
+
 .center {
 	margin-left: auto;
 	margin-right: auto;
@@ -33,6 +42,10 @@ tr:hover { background-color: #ddf }
 
 .section {
 	padding: 5px;
+}
+
+#paramFirstDuration, #paramLastDuration {
+	width: 50px;
 }
 
 #infoError {
