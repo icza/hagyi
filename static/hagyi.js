@@ -93,6 +93,9 @@ function processParams() {
 	if (day < 1) {
 		return setInfoError("A kezdő dátum a jövőben van!");
 	}
+	if (day > 999) {
+		return setInfoError("Érvénytelen kezdő dátum!");
+	}
 
 	let firstDuration = elByID("paramFirstDuration").valueAsNumber;
 	let lastDuration = elByID("paramLastDuration").valueAsNumber;
@@ -206,7 +209,7 @@ function elByID(id) {
 
 function defaultBeep() {
 	if (elByID("paramSound").checked) {
-		beep(800, 440, 0.05, "sine");
+		beep(800, 440, 0.05);
 	}
 }
 
@@ -216,9 +219,7 @@ var audioCtx; // Lazy init, some browsers require user interaction first!
 // duration of the tone in milliseconds. Default is 500
 // frequency of the tone in hertz. default is 440
 // volume of the tone. Default is 1, off is 0.
-// type of tone. Possible values are sine, square, sawtooth, triangle, and custom. Default is sine.
-// callback to use on end of tone
-function beep(duration, frequency, volume, type, callback) {
+function beep(duration, frequency, volume) {
 	if (!audioCtx) {
 		audioCtx = new (window.AudioContext || window.webkitAudioContext || window.audioContext);
 	}
@@ -229,10 +230,12 @@ function beep(duration, frequency, volume, type, callback) {
 	oscillator.connect(gainNode);
 	gainNode.connect(audioCtx.destination);
 
-	if (volume){gainNode.gain.value = volume;}
-	if (frequency){oscillator.frequency.value = frequency;}
-	if (type){oscillator.type = type;}
-	if (callback){oscillator.onended = callback;}
+	if (volume) {
+		gainNode.gain.value = volume;
+	}
+	if (frequency) {
+		oscillator.frequency.value = frequency;
+	}
 
 	oscillator.start(audioCtx.currentTime);
 	oscillator.stop(audioCtx.currentTime + ((duration || 500) / 1000));
