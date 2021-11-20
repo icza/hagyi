@@ -51,8 +51,9 @@ function resetApp() {
 		startStop();
 	}
 
-	delKeys("paramFirstDay", "paramFirstDuration", "paramLastDuration", "paramSound",
-		"stopTime", "startTime", "currentPhaseIdx", "animating");
+	if (typeof(Storage) != "undefined") {
+		localStorage.clear();
+	}
 
 	location.reload();
 }
@@ -417,13 +418,6 @@ function getKey(key) {
 	}
 
 	return localStorage.getItem(key);
-}
-
-// delKeys deletes values of all listed keys from the local storage.
-function delKeys(...keys) {
-	for (let key of keys) {
-		delKey(key);
-	}
 }
 
 // delKey deletes the stored value for the given key from the local storage.
