@@ -11,10 +11,10 @@
 	<h1>3. 100 napos állásgyakorlat időzítő</h1>
 
 	<div id="params" class="section">
-		Első nap: <input id="paramFirstDay" type="date" onchange="processParams()"><script>elByID("paramFirstDay").value = todayString();</script>
+		Első nap: <input id="paramFirstDay" type="date" value="" onchange="processParams()"> <!-- Must provide value  even if empty for storage to work -->
 		Állás az 1. napon: <input id="paramFirstDuration" type="number" min="1" max="100" value="4" onchange="processParams()"> perc.
 		A 100. napon: <input id="paramLastDuration" type="number" min="1" max="100" value="40" onchange="processParams()"> perc.
-		<input id="paramSound" type="checkbox" checked><label for="paramSound">Hang</label>
+		<input id="paramSound" type="checkbox" onchange="storeValue('paramSound')" checked><label for="paramSound">Hang</label>
 	</div>
 
 	<div id="info" class="section">
@@ -30,6 +30,7 @@
 			<div id="infoStartEnd" style="display: none" class="section">
 				Kezdés: <span id="infoStart" class="infoValue"></span>
 				Vége: <span id="infoEnd" class="infoValue"></span>
+				<span id="infoStopPanel" style="display: none">Leállítva: <span id="infoStop" class="infoValue"></span></span>
 			</div>
 			<div id="infoCongratulations" style="display: none" class="section">
 				Gratulálok! Megcsináltad! (Tudtam, hogy sikerülni fog!)
@@ -46,6 +47,10 @@
 		</div>
 	</div>
 
+	<div class="section">
+		<button id="resetApp" onclick="resetApp()">Paraméterek törlése, alapállapot!</button>
+	</div>
+
 	<div id="footer">
 		Copyright 2021 Belicza András
 		| <a href="https://github.com/icza/hagyi" target="_blank">Forráskód</a>
@@ -53,8 +58,7 @@
 	</div>
 
 	<script>
-		initTable();
-		processParams();
+		initApp();
 	</script>
 
 </body>

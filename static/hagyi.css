@@ -48,6 +48,10 @@ tr:hover { background-color: #ddf }
 	width: 50px;
 }
 
+#infoStopPanel {
+	color: red;
+}
+
 #infoError {
 	color: red;
 }
