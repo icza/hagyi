@@ -19,8 +19,8 @@ var animateID = null;
 
 // initApp initializes the app.
 function initApp() {
-	phaseChangeAudio.volume = 0.2;
-	finishedAudio.volume = 0.2;
+	phaseChangeAudio.volume = 0.5;
+	finishedAudio.volume = 0.5;
 
 	restoreValues("paramFirstDay", "paramFirstDuration", "paramLastDuration", "paramSound");
 	if (elByID("paramFirstDay").value == "") {
