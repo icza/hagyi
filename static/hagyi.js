@@ -10,12 +10,23 @@ var phases = [
 	{name:"Jobb Tigris", weight: 2/40},
 ];
 
+// App state
+var startTime = null;
+var stopTime = null;
+var duration = 0;
+var currentPhaseIdx = -1;
+var animateID = null;
+
 // initApp initializes the app.
 function initApp() {
+	phaseChangeAudio.volume = 0.2;
+	finishedAudio.volume = 0.2;
+
 	restoreValues("paramFirstDay", "paramFirstDuration", "paramLastDuration", "paramSound");
 	if (elByID("paramFirstDay").value == "") {
 		elByID("paramFirstDay").value = todayString();
 	}
+	
 	initTable();
 	processParams();
 
@@ -37,8 +48,7 @@ function initApp() {
 
 	let storedAnimating = getKey("animating");
 	if (storedAnimating != null) {
-		animating = Number(storedAnimating);
-		if (animating) {
+		if (Number(storedAnimating)) {
 			startStop(true);
 		}
 	}
@@ -85,11 +95,6 @@ function initTable() {
 	updateTable();
 }
 
-var startTime = null;
-var stopTime = null;
-var duration = 0;
-var currentPhaseIdx = -1;
-
 function updateTable() {
 	let elapsed = getElapsed()
 
@@ -113,12 +118,12 @@ function updateTable() {
 			cells[2].innerText = formatMin(elapsed);
 			cells[3].innerText = formatMin(phaseDuration - elapsed);
 			percentCell(cells[4], elapsed / phaseDuration);
-			if (animating && !foundCurrentIdx) {
+			if (animateID && !foundCurrentIdx) {
 				foundCurrentIdx = true;
 				if (currentPhaseIdx != i) {
 					currentPhaseIdx = i;
 					setKeyValue("currentPhaseIdx", currentPhaseIdx);
-					defaultBeep();
+					changeSound();
 				}
 			}
 			elapsed = 0;
@@ -174,15 +179,11 @@ function processParams() {
 	updateTable();
 }
 
-var animateID;
-var animating = 0; // 0 or 1
-
 function startStop(fromInit) {
 	function stopAnimation() {
 		clearInterval(animateID);
 		animateID = null;
-		animating = 0;
-		setKeyValue("animating", animating);
+		setKeyValue("animating", animateID ? 1 : 0);
 
 		if (!(getElapsed() >= duration)) {
 			stopTime = new Date();
@@ -210,7 +211,7 @@ function startStop(fromInit) {
 		stopTime = null;
 		delKey("stopTime");
 		animating = 1;
-		setKeyValue("animating", animating);
+		setKeyValue("animating", 1);
 	}
 
 	updateInfoPanel();
@@ -218,6 +219,7 @@ function startStop(fromInit) {
 	function frame() {
 		updateTable();
 		if (getElapsed() >= duration) {
+			finishedSound();
 			stopAnimation();
 		}
 	}
@@ -225,6 +227,8 @@ function startStop(fromInit) {
 	animateID = setInterval(frame, 1000);
 }
 
+// updateInfoPanel upates the info panel.
+// Can only be called once startTime has been set.
 function updateInfoPanel() {
 	// use en-GB local for time formatting (it uses 24-hour format)
 	elByID("infoStart").innerText = startTime.toLocaleTimeString("en-GB");
@@ -300,39 +304,20 @@ function elByID(id) {
 	return document.getElementById(id);
 }
 
-function defaultBeep() {
+function changeSound() {
 	if (elByID("paramSound").checked) {
-		beep(800, 440, 0.05);
+		phaseChangeAudio.play();
 	}
 }
 
-var audioCtx; // Lazy init, some browsers require user interaction first!
-
-// All arguments are optional:
-// duration of the tone in milliseconds. Default is 500
-// frequency of the tone in hertz. default is 440
-// volume of the tone. Default is 1, off is 0.
-function beep(duration, frequency, volume) {
-	if (!audioCtx) {
-		audioCtx = new (window.AudioContext || window.webkitAudioContext || window.audioContext);
+function finishedSound() {
+	if (elByID("paramSound").checked) {
+		finishedAudio.play();
 	}
-
-	var oscillator = audioCtx.createOscillator();
-	var gainNode = audioCtx.createGain();
-
-	oscillator.connect(gainNode);
-	gainNode.connect(audioCtx.destination);
-
-	if (volume) {
-		gainNode.gain.value = volume;
-	}
-	if (frequency) {
-		oscillator.frequency.value = frequency;
-	}
-
-	oscillator.start(audioCtx.currentTime);
-	oscillator.stop(audioCtx.currentTime + ((duration || 500) / 1000));
 }
+
+var phaseChangeAudio = new Audio("static/change.mp3");
+var finishedAudio = new Audio("static/end.mp3");
 
 // toreValues stores the "values" of the elements given by their IDs in the local storage.
 function storeValues(...ids) {
