@@ -2,18 +2,33 @@
 // All durations are represented and calculated in mintues.
 
 var phases = [
+	{name:"Valtas", duration: 4/60, change: true},
 	{name:"Bal Santi shi", weight: 15/40},
+	{name:"Valtas", duration: 4/60, change: true},
 	{name:"Jobb Santi shi", weight: 15/40},
+	{name:"Valtas", duration: 4/60, change: true},
 	{name:"Bal Sárkány", weight: 3/40},
+	{name:"Valtas", duration: 4/60, change: true},
 	{name:"Jobb Sárkány", weight: 3/40},
+	{name:"Valtas", duration: 4/60, change: true},
 	{name:"Bal Tigris", weight: 2/40},
+	{name:"Valtas", duration: 4/60, change: true},
 	{name:"Jobb Tigris", weight: 2/40},
 ];
+
+var totalChangesDuration = 0;
+
+for (let phase of phases) {
+	if (phase.change) {
+		totalChangesDuration += phase.duration;
+	}
+}
 
 // App state
 var startTime = null;
 var stopTime = null;
 var duration = 0;
+var durationWithoutChanges = 0;
 var currentPhaseIdx = -1;
 var animateID = null;
 
@@ -71,13 +86,20 @@ function resetApp() {
 function initTable() {
 	let table = elByID("infoTable");
 
-	for (let phase of phases) {
+	for (let i = 0; i < phases.length; i++) {
+		let phase = phases[i];
 		let tr = document.createElement("tr");
 		let td = document.createElement("td");
 		td.innerText = phase.name;
 		tr.appendChild(td);
 		for (let i = 0; i < 4; i++) {
 			tr.appendChild(document.createElement("td"));
+		}
+		if (i%4 == 3) {
+			tr.style.backgroundColor = "#fff3cf";
+		}
+		if (phase.change) {
+			tr.style.display = "none";
 		}
 		table.appendChild(tr);
 	}
@@ -96,7 +118,7 @@ function initTable() {
 }
 
 function updateTable() {
-	let elapsed = getElapsed()
+	let elapsed = getElapsed();
 
 	let table = elByID("infoTable");
 	// Footer:
@@ -109,7 +131,7 @@ function updateTable() {
 	let foundCurrentIdx = false;
 	for (let i = 0; i < phases.length; i++) {
 		let phase = phases[i];
-		let phaseDuration = duration * phase.weight;
+		let phaseDuration = phase.duration ? phase.duration : durationWithoutChanges * phase.weight;
 
 		let cells = table.rows[i+1].cells;
 		cells[1].innerText = formatMin(phaseDuration);
@@ -120,7 +142,7 @@ function updateTable() {
 			percentCell(cells[4], elapsed / phaseDuration);
 			if (animateID && !foundCurrentIdx) {
 				foundCurrentIdx = true;
-				if (currentPhaseIdx != i) {
+				if (phase.change && currentPhaseIdx != i) {
 					currentPhaseIdx = i;
 					setKeyValue("currentPhaseIdx", currentPhaseIdx);
 					changeSound();
@@ -170,11 +192,13 @@ function processParams() {
 	}
 	
 	// All good!
-	duration = firstDuration + (lastDuration - firstDuration) / 99 * (day-1);
+	durationWithoutChanges = firstDuration + (lastDuration - firstDuration) / 99 * (day-1);
 
 	clearInfoError();
 	elByID("infoDay").innerText = day;
-	elByID("infoDuration").innerText = formatMin(duration);
+	elByID("infoDuration").innerText = formatMin(durationWithoutChanges);
+
+	duration = durationWithoutChanges + totalChangesDuration;
 
 	updateTable();
 }
@@ -185,7 +209,7 @@ function startStop(fromInit) {
 		animateID = null;
 		setKeyValue("animating", animateID ? 1 : 0);
 
-		if (!(getElapsed() >= duration)) {
+		if (!isOver()) {
 			stopTime = new Date();
 			setKeyValue("stopTime", stopTime.getTime());
 		}
@@ -218,7 +242,7 @@ function startStop(fromInit) {
 
 	function frame() {
 		updateTable();
-		if (getElapsed() >= duration) {
+		if (isOver()) {
 			finishedSound();
 			stopAnimation();
 		}
@@ -240,7 +264,7 @@ function updateInfoPanel() {
 		elByID("infoStopPanel").style.display = "none";
 	}
 
-	if (getElapsed() >= duration) {
+	if (isOver()) {
 		elByID("infoCongratulations").style.display = "";
 	} else {
 		elByID("infoCongratulations").style.display = "none";
@@ -263,6 +287,11 @@ function getElapsed() {
 		elapsed = duration;
 	}
 	return elapsed
+}
+
+// isOver tells if duration has elapsed, including change times.
+function isOver() {
+	return getElapsed() >= duration;
 }
 
 function formatMin(duration) {

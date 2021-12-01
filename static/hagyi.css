@@ -29,10 +29,6 @@ th {
 
 tr { background: white }
 
-tr:nth-child(even) { background-color: #fff }
-
-tr:nth-child(odd) { background-color: #fff3cf }
-
 tr:hover { background-color: #ddf }
 
 .center {
