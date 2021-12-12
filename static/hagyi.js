@@ -2,17 +2,17 @@
 // All durations are represented and calculated in mintues.
 
 var phases = [
-	{name:"Valtas", duration: 4/60, change: true},
+	{name:"Valtas", duration: 5/60, change: true},
 	{name:"Bal Santi shi", weight: 15/40},
-	{name:"Valtas", duration: 4/60, change: true},
+	{name:"Valtas", duration: 5/60, change: true},
 	{name:"Jobb Santi shi", weight: 15/40},
-	{name:"Valtas", duration: 4/60, change: true},
+	{name:"Valtas", duration: 5/60, change: true},
 	{name:"Bal Sárkány", weight: 3/40},
-	{name:"Valtas", duration: 4/60, change: true},
+	{name:"Valtas", duration: 5/60, change: true},
 	{name:"Jobb Sárkány", weight: 3/40},
-	{name:"Valtas", duration: 4/60, change: true},
+	{name:"Valtas", duration: 5/60, change: true},
 	{name:"Bal Tigris", weight: 2/40},
-	{name:"Valtas", duration: 4/60, change: true},
+	{name:"Valtas", duration: 5/60, change: true},
 	{name:"Jobb Tigris", weight: 2/40},
 ];
 
