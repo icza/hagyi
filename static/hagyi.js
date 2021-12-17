@@ -216,6 +216,8 @@ function startStop(fromInit) {
 
 		updateInfoPanel();
 		elByID("startStopButton").innerText = "Indítás!";
+		
+		noSleep.disable();
 	}
 	
 	if (animateID) {
@@ -249,6 +251,8 @@ function startStop(fromInit) {
 	}
 	frame(); // Call it now
 	animateID = setInterval(frame, 1000);
+
+	noSleep.enable();
 }
 
 // updateInfoPanel upates the info panel.
@@ -347,6 +351,8 @@ function finishedSound() {
 
 var phaseChangeAudio = new Audio("static/change.mp3");
 var finishedAudio = new Audio("static/end.mp3");
+
+var noSleep = new NoSleep();
 
 // toreValues stores the "values" of the elements given by their IDs in the local storage.
 function storeValues(...ids) {
