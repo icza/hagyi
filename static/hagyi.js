@@ -302,6 +302,11 @@ function formatMin(duration) {
 	let min = Math.floor(duration);
 	let sec = Math.round(60 * (duration % 1));
 
+	if (sec == 60) {
+		sec = 0;
+		min++;
+	}
+
 	return min + ":" + String(sec).padStart(2, "0")
 }
 
